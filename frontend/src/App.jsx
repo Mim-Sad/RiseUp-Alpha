@@ -11,6 +11,69 @@ import miniLogo from './assets/logo/ru-logo-w.png';
 // Import your Lottie animation file
 import welcomeAnimation from './assets/bubble.json';
 
+// کامپوننت سفارشی برای مدیریت جدول
+const TableWrapper = ({ children }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  return (
+    <>
+      <div style={{ display: 'none' }}>
+        {children}
+      </div>
+
+      <div>
+        <table className='preview-table-table'>
+          <tr>
+            <th>Company</th>
+            <th>Contact</th>
+            <th>Country</th>
+          </tr>
+          <tr>
+            <td>Alfreds Futterkiste</td>
+            <td>Maria Anders</td>
+            <td>Germany</td>
+          </tr>
+          <tr>
+            <td>Centro comercial Moctezuma</td>
+            <td>Francisco Chang</td>
+            <td>Mexico</td>
+          </tr>
+          <tr>
+            <td>Ernst Handel</td>
+            <td>Roland Mendel</td>
+            <td>Austria</td>
+          </tr>
+          <tr>
+            <td>Island Trading</td>
+            <td>Helen Bennett</td>
+            <td>UK</td>
+          </tr>
+          <tr>
+            <td>Laughing Bacchus Winecellars</td>
+            <td>Yoshi Tannamuri</td>
+            <td>Canada</td>
+          </tr>
+          <tr>
+            <td>Magazzini Alimentari Riuniti</td>
+            <td>Giovanni Rovelli</td>
+            <td>Italy</td>
+          </tr>
+        </table>
+        <button className='preview-table-button' onClick={() => setModalVisible(true)}>مشاهده جدول</button>
+      </div>
+
+      {modalVisible && (
+        <div className="lightbox-overlay" onClick={() => setModalVisible(false)}>
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <button className="close-button" onClick={() => setModalVisible(false)}>بستن</button>
+            {children}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -64,10 +127,10 @@ function App() {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split('\n').filter(line => line.trim() !== '');
-        
+
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = line.substring(6);
@@ -81,9 +144,7 @@ function App() {
                   // Update the AI message with the accumulated response
                   setMessages((prev) =>
                     prev.map((msg) =>
-                      msg.id === aiMessageId
-                        ? { ...msg, content: aiResponse }
-                        : msg
+                      msg.id === aiMessageId ? { ...msg, content: aiResponse } : msg
                     )
                   );
                 }
@@ -107,66 +168,70 @@ function App() {
 
   return (
     <div className='back-root'>
-    <div className="chat-container">
-      <header className="chat-header">
-        <img className='logo-in-header' src={miniLogo}></img>
-        <p>هوش مصنوعی</p><h1>رایـــزآپ!</h1>
-      </header>
-      
-      <div className="messages-container">
-        {messages.length === 0 ? (
-          <div className="welcome-message">
-            <Lottie 
-              animationData={welcomeAnimation} 
-              loop={true} 
-              style={{ opacity:1 }}
-              className='welcome-lottie'
-            />
-            <h2>خوش اومدی به RiseUp</h2>
-            <p>شوالیه تاریکی بر می‌خیزد؟ شاید وقتشه تو هم پاشی! من کمکت میکنم...</p>
-          </div>
-        ) : (
-          messages.map((message, index) => (
-            <div
-              key={index}
-              className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-            >
-              <div className="message-content">
-                {message.role === 'assistant' ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content || 'اوممم...'}</ReactMarkdown>
-                ) : (
-                  <p>{message.content}</p>
-                )}
-              </div>
+      <div className="chat-container">
+        <header className="chat-header">
+          <img className='logo-in-header' src={miniLogo} alt="Logo" />
+          <p>هوش مصنوعی</p><h1>رایـــزآپ!</h1>
+        </header>
+
+        <div className="messages-container">
+          {messages.length === 0 ? (
+            <div className="welcome-message">
+              <Lottie
+                animationData={welcomeAnimation}
+                loop={true}
+                style={{ opacity: 1 }}
+                className='welcome-lottie'
+              />
+              <h2>خوش اومدی به RiseUp</h2>
+              <p>شوالیه تاریکی بر می‌خیزد؟ شاید وقتشه تو هم پاشی! من کمکت میکنم...</p>
             </div>
-          ))
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+          ) : (
+            messages.map((message, index) => (
+              <div
+                key={index}
+                className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+              >
+                <div className="message-content">
+                  {message.role === 'assistant' ? (
+                    // استفاده از کامپوننت سفارشی TableWrapper برای رندر جدول‌ها
+                    <ReactMarkdown
+                      components={{ table: TableWrapper }}
+                      remarkPlugins={[remarkGfm]}
+                    >
+                      {message.content || 'اوممم...'}
+                    </ReactMarkdown>
+                  ) : (
+                    <p>{message.content}</p>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
         <div className='chat-footer-area'>
-            <div className='input-form-area'>
-                <form className="input-form" onSubmit={handleSubmit}>
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="هر چه میخواهد دل تنگت بگو..."
-                    disabled={isLoading}
-                  />
-                  
-                  {/* {isLoading ? 'Sending...' : 'Send'} */}
-                  <button type="submit" disabled={isLoading || !input.trim()}>
-                    {isLoading ? (
-                      <img src={loadingIcon} alt="Loading" width="30" height="30" />
-                    ) : (
-                      <img src={sendIcon} alt="Send" width="30" height="30" />
-                    )}
-                  </button>
-                </form>
-            </div>
+          <div className='input-form-area'>
+            <form className="input-form" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="هر چه میخواهد دل تنگت بگو..."
+                disabled={isLoading}
+              />
+              <button type="submit" disabled={isLoading || !input.trim()}>
+                {isLoading ? (
+                  <img src={loadingIcon} alt="Loading" width="30" height="30" />
+                ) : (
+                  <img src={sendIcon} alt="Send" width="30" height="30" />
+                )}
+              </button>
+            </form>
           </div>
-    </div>
+        </div>
+      </div>
     </div>
   );
 }
