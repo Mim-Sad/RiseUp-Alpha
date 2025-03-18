@@ -17,35 +17,35 @@ const TableWrapper = ({ children }) => {
 
   return (
     <>
-      <div style={{ display: 'none' }} className='popup-view-table'>
+      <div style={{ display: 'none' }}>
         {children}
       </div>
 
       <div>
         <div className='preview-table-area'>
-            <table className='preview-table-table'>
-              <tr>
-                <th>Company</th>
-                <th>Contact</th>
-                <th>Country</th>
-              </tr>
-              <tr>
-                <td>Alfreds</td>
-                <td>Maria</td>
-                <td>Germany</td>
-              </tr>
-              <tr>
-                <td>Moctezuma</td>
-                <td>Francisco</td>
-                <td>Mexico</td>
-              </tr>
-              <tr>
-                <td>Handel</td>
-                <td>Roland</td>
-                <td>Austria</td>
-              </tr>
+          <table className='preview-table-table'>
+            <tr>
+              <th>Company</th>
+              <th>Contact</th>
+              <th>Country</th>
+            </tr>
+            <tr>
+              <td>Alfreds</td>
+              <td>Maria</td>
+              <td>Germany</td>
+            </tr>
+            <tr>
+              <td>Moctezuma</td>
+              <td>Francisco</td>
+              <td>Mexico</td>
+            </tr>
+            <tr>
+              <td>Handel</td>
+              <td>Roland</td>
+              <td>Austria</td>
+            </tr>
 
-            </table>
+          </table>
           <button className='preview-table-button' onClick={() => setModalVisible(true)}>مشاهده جدول</button>
         </div>
       </div>
@@ -53,8 +53,15 @@ const TableWrapper = ({ children }) => {
       {modalVisible && (
         <div className="lightbox-overlay" onClick={() => setModalVisible(false)}>
           <div className="lightbox-content" onClick={e => e.stopPropagation()}>
-            <button className="close-button" onClick={() => setModalVisible(false)}>بستن</button>
-            {children}
+            <div className='popup-table-area'>
+              <table className='popup-view-table'>
+                {children}
+              </table>
+            </div>
+            <div className='popup-toolbar'>
+            <button className="popup-close-button" onClick={() => setModalVisible(false)}>بستن</button>
+            <button className="popup-print-button" onClick=''>پرینت</button>
+            </div>
           </div>
         </div>
       )}
