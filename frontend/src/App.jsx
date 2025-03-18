@@ -59,8 +59,8 @@ const TableWrapper = ({ children }) => {
               </table>
             </div>
             <div className='popup-toolbar'>
-            <button className="popup-close-button" onClick={() => setModalVisible(false)}>بستن</button>
-            <button className="popup-print-button" onClick=''>پرینت</button>
+              <button className="popup-close-button" onClick={() => setModalVisible(false)}>بستن</button>
+              <button className="popup-print-button" onClick={printTable}>پرینت</button>
             </div>
           </div>
         </div>
@@ -68,6 +68,40 @@ const TableWrapper = ({ children }) => {
     </>
   );
 };
+
+// تابع چاپ
+const printTable = () => {
+  // انتخاب عنصر جدول با استفاده از کلاس
+  const table = document.querySelector('.popup-view-table');
+  if (!table) return;
+
+  // گرفتن تمامی تگ‌های استایل و لینک‌های CSS موجود در صفحه
+  const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+    .map((node) => node.outerHTML)
+    .join('');
+
+  // باز کردن پنجره جدید
+  const newWin = window.open('', '_blank', 'width=800,height=600');
+  newWin.document.open();
+  newWin.document.write(`
+    <html>
+      <head>
+        <title>Print Table</title>
+        ${styles}
+      </head>
+      <body class="print-layout">
+        ${table.outerHTML}
+      </body>
+    </html>
+  `);
+  newWin.document.close();
+  newWin.focus();
+
+  // دستور چاپ و سپس بستن پنجره
+  newWin.print();
+  newWin.close();
+};
+
 
 function App() {
   const [messages, setMessages] = useState([]);
