@@ -19,8 +19,23 @@ import loadAnimation from './assets/lottie/dot-breathing.json';
 
 // کامپوننت سفارشی برای مدیریت جدول
 const TableWrapper = ({ children }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-
+  // Extract table content from children
+  const tableContent = children ? children : null;
+  
+  // Function to handle button click
+  const handleShowTable = () => {
+    // Set both the visibility and content
+    window.setTableModalContent(tableContent);
+    window.setTableModalVisible(true);
+  };
+  
+  // Update modal content whenever children prop changes
+  useEffect(() => {
+    if (window.tableModalVisible) {
+      window.setTableModalContent(tableContent);
+    }
+  }, [tableContent]);
+  
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -50,29 +65,18 @@ const TableWrapper = ({ children }) => {
               <td>Roland</td>
               <td>Austria</td>
             </tr>
-
           </table>
-          <button className='preview-table-button' onClick={() => setModalVisible(true)}>مشاهده جدول</button>
+          <button className='preview-table-button' onClick={handleShowTable}>مشاهده جدول</button>
         </div>
       </div>
-
-      {modalVisible && (
-        <div className="lightbox-overlay" onClick={() => setModalVisible(false)}>
-          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
-            <div className='popup-table-area'>
-              <table className='popup-view-table'>
-                {children}
-              </table>
-            </div>
-            <div className='popup-toolbar'>
-              <button className="popup-close-button" onClick={() => setModalVisible(false)}>بستن</button>
-              <button className="popup-print-button" onClick={printTable}>پرینت</button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
+};
+
+// تابع برای نمایش مودال جدول
+const showTableModal = (visible, content) => {
+  window.tableModalContent = content;
+  window.setTableModalVisible(visible);
 };
 
 // تابع چاپ
@@ -114,7 +118,16 @@ function App() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [tableModalVisible, setTableModalVisible] = useState(false);
+  const [tableModalContent, setTableModalContent] = useState(null);
   const messagesEndRef = useRef(null);
+  
+  // Set up global access to modal controls
+  useEffect(() => {
+    window.setTableModalVisible = setTableModalVisible;
+    window.tableModalContent = tableModalContent;
+    window.setTableModalContent = setTableModalContent;
+  }, [tableModalContent]);
 
   // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
@@ -354,6 +367,22 @@ function App() {
           </div>
         </div>
       </div>
+      
+      {tableModalVisible && (
+        <div className="lightbox-overlay" onClick={() => setTableModalVisible(false)}>
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <div className='popup-table-area'>
+              <table className='popup-view-table'>
+                {tableModalContent}
+              </table>
+            </div>
+            <div className='popup-toolbar'>
+              <button className="popup-close-button" onClick={() => setTableModalVisible(false)}>بستن</button>
+              <button className="popup-print-button" onClick={printTable}>پرینت</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
