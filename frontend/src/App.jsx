@@ -52,7 +52,12 @@ const TableWrapper = ({ children }) => {
             </tr>
 
           </table>
-          <button className='preview-table-button' onClick={() => setModalVisible(true)}>مشاهده جدول</button>
+          <button className='preview-table-button' onClick={() => setModalVisible(true)}>
+          <i class="fa-duotone fa-regular fa-table-list"></i>
+          <span>
+            مشاهده جدول
+          </span>
+            </button>
         </div>
       </div>
 
@@ -65,8 +70,18 @@ const TableWrapper = ({ children }) => {
               </table>
             </div>
             <div className='popup-toolbar'>
-              <button className="popup-close-button" onClick={() => setModalVisible(false)}>بستن</button>
-              <button className="popup-print-button" onClick={printTable}>پرینت</button>
+              <button className="popup-close-button" onClick={() => setModalVisible(false)}>
+                <i class="fa-duotone fa-regular fa-circle-xmark"></i>
+                <span>
+                  بستن
+                </span>
+              </button>
+              <button className="popup-print-button" onClick={printTable}>
+                <i class="fa-duotone fa-regular fa-print"></i>
+                <span>
+                  پرینت
+                </span>
+              </button>
             </div>
           </div>
         </div>
