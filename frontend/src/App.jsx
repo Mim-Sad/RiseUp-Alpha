@@ -7,6 +7,8 @@ import './App.css';
 // Import your SVG files
 import sendIcon from './assets/icon/launch.svg';
 import loadingIcon from './assets/icon/more.svg';
+import menuIcon from './assets/icon/menu.svg';
+import closeIcon from './assets/icon/close.svg'
 // Import your Image files
 import miniLogo from './assets/logo/ru-logo-w.png';
 import mainBackground from './assets/bg/abstract_design.jpg';
@@ -111,6 +113,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll to bottom of messages
@@ -199,83 +202,155 @@ function App() {
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className='back-root' style={{ backgroundImage: `url(${mainBackground})` }}>
-      <div className="chat-container">
-        <header className="chat-header">
-          <img className='logo-in-header' src={miniLogo} alt="Logo" />
-          <p>هوش مصنوعی</p><h1>رایـــزآپ!</h1>
-        </header>
+      <div className='root-area'>
+        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+          <div className="sidebar-header">
+            <div className='sidebar-haeder-info'>
 
-        <div className="messages-container">
-          {messages.length === 0 ? (
-            <div className="welcome-message">
-              <Lottie
-                animationData={welcomeAnimation}
-                loop={true}
-                style={{ opacity: 1 }}
-                className='welcome-lottie'
-              />
-              <h2>خوش اومدی به RiseUp</h2>
-              <p>شوالیه تاریکی بر می‌خیزد؟ شاید وقتشه تو هم پاشی! من کمکت میکنم...</p>
-            </div>
-          ) : (
-            messages.map((message, index) => (
-              <div
-                key={index}
-                className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-              >
-                <div className="message-content">
-                  {message.role === 'assistant' ? (
-                    message.content ? (
-                      <ReactMarkdown
-                        components={{ table: TableWrapper }}
-                        remarkPlugins={[remarkGfm]}
-                      >
-                        {message.content}
-                      </ReactMarkdown>
-                    ) : (
-                      <Lottie
-                        animationData={thinkingAnimation}
-                        loop={true}
-                        style={{ opacity: 1 }}
-                        className="thinking-lottie"
-                      />
-                    )
-                  ) : (
-                    <p>{message.content}</p>
-                  )}
-                </div>
+              <img src={miniLogo} alt="RiseUp Logo" className="sidebar-haeder-info-logo" />
+
+              <div className='sidebar-header-info-name'>
+                <h1>RiseUp</h1>
+                <h2>Right Now!</h2>
               </div>
-            ))
-          )}
-          <div ref={messagesEndRef} />
+
+            </div>
+
+            <button className="inner-sidebar-toggle sidebar-toggle" onClick={toggleSidebar}>
+              <img src={closeIcon} alt="close" width="40px" height="40px" />
+            </button>
+
+          </div>
+          <div className="sidebar-content">
+            <button className="new-chat-button">
+              <span>
+                گفتگوی جدید +
+              </span>
+            </button>
+            <div className="chat-history">
+              {/* Placeholder for chat history */}
+              <button className="chat-item active">
+                <span>
+                گفتگوی جاری
+                </span>
+              </button>
+              <button className="chat-item">
+                <span>
+                گفتگوی پیشین
+                </span>
+              </button>
+              <button className="chat-item">
+                <span>
+                گفتگوی آرشیو
+                </span>
+              </button>
+              <button className="chat-item">
+                <span>
+                گفتگوی پین شده
+                </span>
+              </button>
+            </div>
+          </div>
+          <div className="sidebar-footer">
+            <button className="profile-button">
+              <span>
+                تنظیمات پروفایل
+              </span>
+            </button>
+          </div>
         </div>
 
-        <div className='chat-footer-area'>
-          <div className='input-form-area'>
-            <form className="input-form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="هر چه میخواهد دل تنگت بگو..."
-                // disabled={isLoading}
-              />
-              <button type="submit" disabled={isLoading || !input.trim()}>
-                {isLoading ? (
-                  // <img src={loadingIcon} alt="Loading" width="30" height="30" />
-                  <Lottie
-                        animationData={loadAnimation}
-                        loop={true}
-                        style={{ opacity: 1 }}
-                        className="loading-lottie"
-                      />
-                ) : (
-                  <img src={sendIcon} alt="Send" width="30" height="30" />
-                )}
+        <div className="chat-container">
+          <header className="chat-header">
+            <div className='chat-header-option-area'>
+              <button className="sidebar-toggle" onClick={toggleSidebar}>
+                <img src={menuIcon} alt="menu" width="30" height="30" />
               </button>
-            </form>
+            </div>
+
+            <div className='chat-header-name-area'>
+              {/* <img className='logo-in-header' src={miniLogo} alt="Logo" /> */}
+              <span>هوش مصنوعی</span>
+              <h1>رایـــزآپ!</h1>
+            </div>
+          </header>
+
+          <div className="messages-container">
+            {messages.length === 0 ? (
+              <div className="welcome-message">
+                <Lottie
+                  animationData={welcomeAnimation}
+                  loop={true}
+                  style={{ opacity: 1 }}
+                  className='welcome-lottie'
+                />
+                <h2>خوش اومدی به RiseUp</h2>
+                <p>شوالیه تاریکی بر می‌خیزد؟ شاید وقتشه تو هم پاشی! من کمکت میکنم...</p>
+              </div>
+            ) : (
+              messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+                >
+                  <div className="message-content">
+                    {message.role === 'assistant' ? (
+                      message.content ? (
+                        <ReactMarkdown
+                          components={{ table: TableWrapper }}
+                          remarkPlugins={[remarkGfm]}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      ) : (
+                        <Lottie
+                          animationData={thinkingAnimation}
+                          loop={true}
+                          style={{ opacity: 1 }}
+                          className="thinking-lottie"
+                        />
+                      )
+                    ) : (
+                      <p>{message.content}</p>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className='chat-footer-area'>
+            <div className='input-form-area'>
+              <form className="input-form" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="هر چه میخواهد دل تنگت بگو..."
+                // disabled={isLoading}
+                />
+                <button type="submit" disabled={isLoading || !input.trim()}>
+                  {isLoading ? (
+                    // <img src={loadingIcon} alt="Loading" width="30" height="30" />
+                    <Lottie
+                      animationData={loadAnimation}
+                      loop={true}
+                      style={{ opacity: 1 }}
+                      className="loading-lottie"
+                    />
+                  ) : (
+                    <img src={sendIcon} alt="Send" width="30" height="30" />
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
