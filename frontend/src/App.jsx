@@ -86,26 +86,102 @@ const printTable = () => {
     .map((node) => node.outerHTML)
     .join('');
 
-  // باز کردن پنجره جدید
-  const newWin = window.open('', '_blank', 'width=800,height=600');
-  newWin.document.open();
-  newWin.document.write(`
-    <html>
-      <head>
-        <title>Print Table</title>
-        ${styles}
-      </head>
-      <body class="print-layout">
-        ${table.outerHTML}
-      </body>
-    </html>
-  `);
-  newWin.document.close();
-  newWin.focus();
+  // Check if it's a mobile device
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // دستور چاپ و سپس بستن پنجره
-  newWin.print();
-  newWin.close();
+  if (isMobile) {
+    // For mobile devices, create a data URL and open it in a new tab
+    const printContent = `
+      <!DOCTYPE html>
+      <html lang="fa">
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+          <title>Print Table</title>
+          ${styles}
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            @font-face {
+              font-family: 'AlibabaAi';
+              src: url('https://cdn.alibaba.ir/h2/desktop/assets/fonts/alibaba/alibaba-regular.woff2-5d2979c4.woff2') format('woff2');
+              font-weight: normal;
+              font-style: normal;
+              font-display: swap;
+            }
+            body {
+              font-family: 'AlibabaAi', Tahoma, Arial, sans-serif;
+              direction: rtl;
+            }
+            @media print {
+              body {
+                padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body class="print-layout">
+          ${table.outerHTML}
+          <script>
+            // Auto-print when loaded (works on some mobile browsers)
+            window.onload = function() {
+              try {
+                setTimeout(() => window.print(), 1000);
+              } catch (e) {
+                console.error('Print failed:', e);
+              }
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    // Create a blob with UTF-8 encoding and open it in a new tab
+    const blob = new Blob([printContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  } else {
+    // Original desktop printing logic with improved encoding
+    const newWin = window.open('', '_blank', 'width=800,height=600');
+    newWin.document.open();
+    newWin.document.write(`
+      <!DOCTYPE html>
+      <html lang="fa">
+        <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+          <title>Print Table</title>
+          ${styles}
+          <style>
+            @font-face {
+              font-family: 'AlibabaAi';
+              src: url('https://cdn.alibaba.ir/h2/desktop/assets/fonts/alibaba/alibaba-regular.woff2-5d2979c4.woff2') format('woff2');
+              font-weight: normal;
+              font-style: normal;
+              font-display: swap;
+            }
+            body {
+              font-family: 'AlibabaAi', Tahoma, Arial, sans-serif;
+              direction: rtl;
+            }
+            @media print {
+              body {
+                padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body class="print-layout">
+          ${table.outerHTML}
+        </body>
+      </html>
+    `);
+    newWin.document.close();
+    newWin.focus();
+
+    // دستور چاپ و سپس بستن پنجره
+    newWin.print();
+    newWin.close();
+  }
 };
 
 
