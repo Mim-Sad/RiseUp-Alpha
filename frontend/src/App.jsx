@@ -5,11 +5,13 @@ import axios from 'axios';
 import Lottie from 'lottie-react';
 import './App.css';
 // Import your SVG files
-import sendIcon from './assets/launch.svg';
-import loadingIcon from './assets/more.svg';
+import sendIcon from './assets/icon/launch.svg';
+import loadingIcon from './assets/icon/more.svg';
+// Import your Image files
 import miniLogo from './assets/logo/ru-logo-w.png';
+import mainBackground from './assets/bg/abstract_design.jpg';
 // Import your Lottie animation file
-import welcomeAnimation from './assets/bubble.json';
+import welcomeAnimation from './assets/lottie/bubble.json';
 
 // کامپوننت سفارشی برای مدیریت جدول
 const TableWrapper = ({ children }) => {
@@ -196,7 +198,7 @@ function App() {
   };
 
   return (
-    <div className='back-root'>
+    <div className='back-root' style={{ backgroundImage: `url(${mainBackground})` }}>
       <div className="chat-container">
         <header className="chat-header">
           <img className='logo-in-header' src={miniLogo} alt="Logo" />
@@ -223,7 +225,6 @@ function App() {
               >
                 <div className="message-content">
                   {message.role === 'assistant' ? (
-                    // استفاده از کامپوننت سفارشی TableWrapper برای رندر جدول‌ها
                     <ReactMarkdown
                       components={{ table: TableWrapper }}
                       remarkPlugins={[remarkGfm]}
