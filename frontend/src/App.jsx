@@ -147,7 +147,13 @@ function App() {
       setMessages((prev) => [...prev, { role: 'assistant', content: '', id: aiMessageId }]);
 
       // Set up event source for streaming
-      const response = await fetch('http://localhost:5000/api/chat', {
+      const apiServerIp = import.meta.env.VITE_API_SERVER_IP || "192.168.1.5"
+      const apiServerPort = import.meta.env.VITE_API_SERVER_PORT || "5000"
+      const apiServerAddress = `http://${apiServerIp}:${apiServerPort}/api/chat`;
+
+      console.log(apiServerAddress)
+
+      const response = await fetch(apiServerAddress, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
