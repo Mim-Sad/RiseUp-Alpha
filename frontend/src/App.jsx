@@ -237,22 +237,22 @@ function App() {
               {/* Placeholder for chat history */}
               <button className="chat-item active">
                 <span>
-                گفتگوی جاری
+                  گفتگوی جاری
                 </span>
               </button>
               <button className="chat-item">
                 <span>
-                گفتگوی پیشین
+                  گفتگوی پیشین
                 </span>
               </button>
               <button className="chat-item">
                 <span>
-                گفتگوی آرشیو
+                  گفتگوی آرشیو
                 </span>
               </button>
               <button className="chat-item">
                 <span>
-                گفتگوی پین شده
+                  گفتگوی پین شده
                 </span>
               </button>
             </div>
@@ -288,8 +288,15 @@ function App() {
                   animationData={welcomeAnimation}
                   loop={true}
                   style={{ opacity: 1 }}
-                  className='welcome-lottie'
+                  className='welcome-lottie-desktop'
                 />
+                <Lottie
+                  animationData={loadAnimation}
+                  loop={true}
+                  style={{ opacity: 1 }}
+                  className='welcome-lottie-mobile'
+                />
+
                 <h2>خوش اومدی به RiseUp</h2>
                 <p>شوالیه تاریکی بر می‌خیزد؟ شاید وقتشه تو هم پاشی! من کمکت میکنم...</p>
               </div>

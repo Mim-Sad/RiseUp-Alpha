@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'AlibabaAi';
+    src: url('https://cdn.alibaba.ir/h2/desktop/assets/fonts/alibaba/alibaba-regular.woff2-5d2979c4.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'AlibabaAi';
+    src: url('https://cdn.alibaba.ir/h2/desktop/assets/fonts/alibaba/alibaba-bold.woff2-bbb24413.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'AlibabaAi';
+    src: url('https://cdn.alibaba.ir/h2/desktop/assets/fonts/alibaba/alibaba-black.woff2-41970917.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
