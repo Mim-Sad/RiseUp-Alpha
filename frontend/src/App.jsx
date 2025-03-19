@@ -12,6 +12,8 @@ import miniLogo from './assets/logo/ru-logo-w.png';
 import mainBackground from './assets/bg/abstract_design.jpg';
 // Import your Lottie animation file
 import welcomeAnimation from './assets/lottie/bubble.json';
+import thinkingAnimation from './assets/lottie/three-dots.json';
+import loadAnimation from './assets/lottie/dot-breathing.json';
 
 // کامپوننت سفارشی برای مدیریت جدول
 const TableWrapper = ({ children }) => {
@@ -225,12 +227,21 @@ function App() {
               >
                 <div className="message-content">
                   {message.role === 'assistant' ? (
-                    <ReactMarkdown
-                      components={{ table: TableWrapper }}
-                      remarkPlugins={[remarkGfm]}
-                    >
-                      {message.content || 'اوممم...'}
-                    </ReactMarkdown>
+                    message.content ? (
+                      <ReactMarkdown
+                        components={{ table: TableWrapper }}
+                        remarkPlugins={[remarkGfm]}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <Lottie
+                        animationData={thinkingAnimation}
+                        loop={true}
+                        style={{ opacity: 1 }}
+                        className="thinking-lottie"
+                      />
+                    )
                   ) : (
                     <p>{message.content}</p>
                   )}
@@ -249,11 +260,17 @@ function App() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="هر چه میخواهد دل تنگت بگو..."
-                disabled={isLoading}
+                // disabled={isLoading}
               />
               <button type="submit" disabled={isLoading || !input.trim()}>
                 {isLoading ? (
-                  <img src={loadingIcon} alt="Loading" width="30" height="30" />
+                  // <img src={loadingIcon} alt="Loading" width="30" height="30" />
+                  <Lottie
+                        animationData={loadAnimation}
+                        loop={true}
+                        style={{ opacity: 1 }}
+                        className="loading-lottie"
+                      />
                 ) : (
                   <img src={sendIcon} alt="Send" width="30" height="30" />
                 )}
