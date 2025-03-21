@@ -216,10 +216,19 @@ function App() {
     scrollToBottom();
   }, [messages]);
 
-  // Initialize the handleFormSubmit function with App's state setters
+  // Create a ref to store the form submission handler
+  const formSubmitHandlerRef = useRef({
+    appHandleSubmit: null,
+    appSetInput: null
+  });
+  
+  // Initialize the form submission handler refs
   useEffect(() => {
-    handleFormSubmit.appHandleSubmit = handleSubmit;
-    handleFormSubmit.appSetInput = setInput;
+    formSubmitHandlerRef.current.appHandleSubmit = handleSubmit;
+    formSubmitHandlerRef.current.appSetInput = setInput;
+    
+    // Update the external handleFormSubmit function with our refs
+    handleFormSubmit.setRef(formSubmitHandlerRef.current);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -469,30 +478,40 @@ function App() {
 }
 
 // Function to handle form data submission from external components
-const handleFormSubmit = (formData) => {
-  // Convert form data to a string message
-  const formMessage = typeof formData === 'string' 
-    ? formData 
-    : JSON.stringify(formData);
+const handleFormSubmit = (() => {
+  // Create a stable reference that won't change between renders
+  const handlerRef = { current: null };
   
-  // Create a synthetic event to pass to handleSubmit
-  const syntheticEvent = { preventDefault: () => {} };
+  // The actual function that will be exported
+  const handler = (formData) => {
+    console.log(formData);
+    
+    // Convert form data to a string message
+    const formMessage = typeof formData === 'string' 
+      ? formData 
+      : JSON.stringify(formData);
+    
+    // Create a synthetic event to pass to handleSubmit
+    const syntheticEvent = { preventDefault: () => {} };
+    
+    // Access the current refs from the App component
+    if (handlerRef.current && handlerRef.current.appSetInput) {
+      handlerRef.current.appSetInput(formMessage);
+    }
+    
+    // Call handleSubmit with the synthetic event
+    if (handlerRef.current && handlerRef.current.appHandleSubmit) {
+      handlerRef.current.appHandleSubmit(syntheticEvent);
+    }
+  };
   
-  // Get the App's handleSubmit function and input setter
-  // This will be initialized by the App component
-  let appHandleSubmit = null;
-  let appSetInput = null;
+  // Expose a method to update the reference
+  handler.setRef = (ref) => {
+    handlerRef.current = ref;
+  };
   
-  // Set the input value to the form message
-  if (appSetInput) {
-    appSetInput(formMessage);
-  }
-  
-  // Call handleSubmit with the synthetic event
-  if (appHandleSubmit) {
-    appHandleSubmit(syntheticEvent);
-  }
-};
+  return handler;
+})();
 
 // Export both the App component and the handleFormSubmit function
 export { App as default, handleFormSubmit };
