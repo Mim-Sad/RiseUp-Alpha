@@ -216,6 +216,12 @@ function App() {
     scrollToBottom();
   }, [messages]);
 
+  // Initialize the handleFormSubmit function with App's state setters
+  useEffect(() => {
+    handleFormSubmit.appHandleSubmit = handleSubmit;
+    handleFormSubmit.appSetInput = setInput;
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -462,4 +468,31 @@ function App() {
   );
 }
 
-export default App;
+// Function to handle form data submission from external components
+const handleFormSubmit = (formData) => {
+  // Convert form data to a string message
+  const formMessage = typeof formData === 'string' 
+    ? formData 
+    : JSON.stringify(formData);
+  
+  // Create a synthetic event to pass to handleSubmit
+  const syntheticEvent = { preventDefault: () => {} };
+  
+  // Get the App's handleSubmit function and input setter
+  // This will be initialized by the App component
+  let appHandleSubmit = null;
+  let appSetInput = null;
+  
+  // Set the input value to the form message
+  if (appSetInput) {
+    appSetInput(formMessage);
+  }
+  
+  // Call handleSubmit with the synthetic event
+  if (appHandleSubmit) {
+    appHandleSubmit(syntheticEvent);
+  }
+};
+
+// Export both the App component and the handleFormSubmit function
+export { App as default, handleFormSubmit };
