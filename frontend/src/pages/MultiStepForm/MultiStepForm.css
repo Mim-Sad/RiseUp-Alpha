@@ -1,0 +1,248 @@
+@import url('../../App.css');
+
+.multistep-form-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff26;
+  backdrop-filter: blur(75px);
+  border: 1px solid #ffffff8a;
+  border-radius: 15px;
+  font-family: var(--mainFont);
+  color: white;
+  direction: rtl;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-header h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 15px #ffffff8c;
+}
+
+/* Progress bar styling */
+.progress-container {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #00000040;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0188fd, #e7b100);
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Steps indicator */
+.steps-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.steps-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ffffff40;
+  z-index: 0;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #00000040;
+  border: 2px solid #ffffff8a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.step-circle.active {
+  background-color: #0188fd;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(1, 136, 253, 0.5);
+}
+
+.step-circle.completed {
+  background-color: #e7b100;
+}
+
+/* Form step styling */
+.form-step {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ffffff52;
+  border-radius: 8px;
+  background-color: #00000028;
+  color: white;
+  font-family: var(--mainFont);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0188fd;
+  box-shadow: 0 0 8px rgba(1, 136, 253, 0.3);
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder,
+.form-group textarea::placeholder {
+  color: #ffffff80;
+}
+
+/* Navigation buttons */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.prev-button,
+.next-button,
+.submit-button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--mainFont);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prev-button {
+  background-color: #00000040;
+  color: white;
+  border: 1px solid #ffffff52;
+}
+
+.prev-button:hover {
+  background-color: #00000060;
+}
+
+.next-button {
+  background-color: #0188fd;
+  color: white;
+  border: none;
+}
+
+.next-button:hover {
+  background-color: #0170d1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(1, 136, 253, 0.3);
+}
+
+.submit-button {
+  background-color: #e7b100;
+  color: white;
+  border: none;
+}
+
+.submit-button:hover {
+  background-color: #c99700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(231, 177, 0, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .multistep-form-container {
+    padding: 1.5rem;
+    width: 90%;
+  }
+  
+  .form-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .step-circle {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .form-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .prev-button,
+  .next-button,
+  .submit-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .multistep-form-container {
+    padding: 1rem;
+    width: 95%;
+  }
+  
+  .form-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .step-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+}
